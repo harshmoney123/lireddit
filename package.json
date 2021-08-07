@@ -1,0 +1,29 @@
+{
+  "name": "lireddit-server",
+  "version": "1.0.0",
+  "description": "These are notes that I am taking from the tutorial: https://www.youtube.com/watch?v=I6ypD7qv3Z8&ab_channel=BenAwad",
+  "main": "index.js",
+  "scripts": {
+    "watch": "tsc -w",
+    "dev": "nodemon dist/index.js",
+    "start": "node dist/index.js",
+    "start2": "ts-node src/index.ts",
+    "dev2": "nodemon --exec ts-node src/index.ts"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/node": "^16.4.13",
+    "ts-node": "^10.1.0",
+    "typescript": "^4.3.5"
+  },
+  "dependencies": {
+    "@mikro-orm/cli": "^4.5.7",
+    "@mikro-orm/core": "^4.5.7",
+    "@mikro-orm/migrations": "^4.5.7",
+    "@mikro-orm/postgresql": "^4.5.7",
+    "nodemon": "^2.0.12",
+    "pg": "^8.7.1"
+  }
+}
