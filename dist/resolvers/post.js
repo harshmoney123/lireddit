@@ -13,8 +13,8 @@ exports.PostResolver = void 0;
 const Post_1 = require("src/entities/Post");
 const type_graphql_1 = require("type-graphql");
 let PostResolver = class PostResolver {
-    hello() {
-        return "hello world";
+    posts() {
+        return "h";
     }
 };
 __decorate([
@@ -22,7 +22,7 @@ __decorate([
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", void 0)
-], PostResolver.prototype, "hello", null);
+], PostResolver.prototype, "posts", null);
 PostResolver = __decorate([
     type_graphql_1.Resolver()
 ], PostResolver);
