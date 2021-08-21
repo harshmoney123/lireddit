@@ -10,15 +10,14 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.PostResolver = void 0;
-const Post_1 = require("src/entities/Post");
 const type_graphql_1 = require("type-graphql");
 let PostResolver = class PostResolver {
     posts() {
-        return "h";
+        return "hello";
     }
 };
 __decorate([
-    type_graphql_1.Query(() => [Post_1.Post]),
+    type_graphql_1.Query(() => String),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", void 0)
