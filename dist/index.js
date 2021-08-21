@@ -18,7 +18,8 @@ const main = async () => {
         schema: await type_graphql_1.buildSchema({
             resolvers: [hello_1.HelloResolver, post_1.PostResolver],
             validate: false
-        })
+        }),
+        context: () => ({ em: orm.em })
     });
     await apolloServer.start();
     apolloServer.applyMiddleware({ app });
