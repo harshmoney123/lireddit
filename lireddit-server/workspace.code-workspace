@@ -1,0 +1,13 @@
+{
+	"folders": [
+		{
+			"path": "..\\..\\lireddit-server"
+		},
+		{
+			"path": "..\\..\\lireddit-web"
+		}
+	],
+	"settings": {
+		"editor.formatOnSave": true
+	}
+}
