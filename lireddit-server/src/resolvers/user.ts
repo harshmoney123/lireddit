@@ -86,7 +86,8 @@ export class UserResolver {
     try {
       await em.persistAndFlush(user);
     } catch (err) {
-      if (err.detail.includes("already exists")) {
+      if (err.code === "23505") {
+        //|| err.detail.includes("already exists")) {
         return {
           errors: [
             {
@@ -138,5 +139,20 @@ export class UserResolver {
     return {
       user,
     };
+  }
+
+  @Mutation(() => Boolean)
+  logout(@Ctx() { req, res }: MyContext) {
+    return new Promise((resolve) =>
+      req.session.destroy((err) => {
+        res.clearCookie("qid");
+        if (err) {
+          console.log(err);
+          resolve(false);
+          return;
+        }
+        resolve(true);
+      })
+    );
   }
 }
