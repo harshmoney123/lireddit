@@ -11,6 +11,7 @@ import {
 } from "type-graphql";
 import { MyContext } from "../types";
 import argon2 from "argon2";
+import { COOKIE_NAME } from "../constants";
 
 declare module "express-session" {
   export interface Session {
@@ -86,8 +87,7 @@ export class UserResolver {
     try {
       await em.persistAndFlush(user);
     } catch (err) {
-      if (err.code === "23505") {
-        //|| err.detail.includes("already exists")) {
+      if (err.detail.includes("already exists")) {
         return {
           errors: [
             {
@@ -145,7 +145,7 @@ export class UserResolver {
   logout(@Ctx() { req, res }: MyContext) {
     return new Promise((resolve) =>
       req.session.destroy((err) => {
-        res.clearCookie("qid");
+        res.clearCookie(COOKIE_NAME);
         if (err) {
           console.log(err);
           resolve(false);

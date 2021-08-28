@@ -19,6 +19,7 @@ exports.UserResolver = void 0;
 const User_1 = require("../entities/User");
 const type_graphql_1 = require("type-graphql");
 const argon2_1 = __importDefault(require("argon2"));
+const constants_1 = require("../constants");
 let UsernamePasswordInput = class UsernamePasswordInput {
 };
 __decorate([
@@ -96,7 +97,7 @@ let UserResolver = class UserResolver {
             await em.persistAndFlush(user);
         }
         catch (err) {
-            if (err.code === "23505") {
+            if (err.detail.includes("already exists")) {
                 return {
                     errors: [
                         {
@@ -143,7 +144,7 @@ let UserResolver = class UserResolver {
     }
     logout({ req, res }) {
         return new Promise((resolve) => req.session.destroy((err) => {
-            res.clearCookie("qid");
+            res.clearCookie(constants_1.COOKIE_NAME);
             if (err) {
                 console.log(err);
                 resolve(false);
