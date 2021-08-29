@@ -9,22 +9,24 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.PostResolver = void 0;
-const Post_1 = require("./entities/Post");
+exports.UsernamePasswordInput = void 0;
 const type_graphql_1 = require("type-graphql");
-let PostResolver = class PostResolver {
-    posts() {
-        return "hello";
-    }
+let UsernamePasswordInput = class UsernamePasswordInput {
 };
 __decorate([
-    type_graphql_1.Query(() => [Post_1.Post]),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", []),
-    __metadata("design:returntype", void 0)
-], PostResolver.prototype, "posts", null);
-PostResolver = __decorate([
-    type_graphql_1.Resolver()
-], PostResolver);
-exports.PostResolver = PostResolver;
-//# sourceMappingURL=post.js.map
+    type_graphql_1.Field(),
+    __metadata("design:type", String)
+], UsernamePasswordInput.prototype, "email", void 0);
+__decorate([
+    type_graphql_1.Field(),
+    __metadata("design:type", String)
+], UsernamePasswordInput.prototype, "username", void 0);
+__decorate([
+    type_graphql_1.Field(),
+    __metadata("design:type", String)
+], UsernamePasswordInput.prototype, "password", void 0);
+UsernamePasswordInput = __decorate([
+    type_graphql_1.InputType()
+], UsernamePasswordInput);
+exports.UsernamePasswordInput = UsernamePasswordInput;
+//# sourceMappingURL=UsernamePasswordInput.js.map

@@ -34,13 +34,13 @@ const main = async () => {
             disableTouch: true,
         }),
         cookie: {
-            maxAge: 1000 * 60 * 60 * 24 * 365 * 10,
+            maxAge: constants_1.MAX_AGE,
             httpOnly: true,
             sameSite: "lax",
             secure: constants_1.__prod__,
         },
         saveUninitialized: false,
-        secret: "asdf;lkjasdf;lkjasdfdasad",
+        secret: constants_1.COOKIE_SECRET,
         resave: false,
     }));
     const apolloServer = new apollo_server_express_1.ApolloServer({

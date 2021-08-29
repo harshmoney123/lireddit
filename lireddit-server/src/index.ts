@@ -1,5 +1,5 @@
 import { MikroORM } from "@mikro-orm/core";
-import { COOKIE_NAME, __prod__ } from "./constants";
+import { COOKIE_NAME, COOKIE_SECRET, MAX_AGE, __prod__ } from "./constants";
 import config from "./mikro-orm.config";
 import express from "express";
 import { ApolloServer } from "apollo-server-express";
@@ -17,6 +17,7 @@ import { ApolloServerPluginLandingPageGraphQLPlayground } from "apollo-server-co
 
 const main = async () => {
   const orm = await MikroORM.init(config);
+
   await orm.getMigrator().up();
 
   const app = express();
@@ -39,13 +40,13 @@ const main = async () => {
         disableTouch: true,
       }),
       cookie: {
-        maxAge: 1000 * 60 * 60 * 24 * 365 * 10, // 10 years
+        maxAge: MAX_AGE, // 10 years
         httpOnly: true,
         sameSite: "lax", // csrf
         secure: __prod__, // cookie only works in https
       },
       saveUninitialized: false,
-      secret: "asdf;lkjasdf;lkjasdfdasad",
+      secret: COOKIE_SECRET,
       resave: false,
     })
   );
