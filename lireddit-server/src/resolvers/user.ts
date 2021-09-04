@@ -10,9 +10,11 @@ import {
 } from "type-graphql";
 import { MyContext } from "../types";
 import argon2 from "argon2";
-import { COOKIE_NAME } from "../constants";
+import { COOKIE_NAME, FORGET_PASSWORD_PREFIX } from "../constants";
 import { UsernamePasswordInput } from "../utils/UsernamePasswordInput";
 import { validateRegister } from "../utils/validateRegister";
+import { sendEmail } from "../utils/sendEmail";
+import { v4 } from "uuid";
 
 declare module "express-session" {
   export interface Session {
@@ -39,15 +41,86 @@ class UserResponse {
 
 @Resolver()
 export class UserResolver {
-  // @Mutation (() => Boolean) {
-  //   async forgotPassword(
-  //     @Arg('email') email: string,
-  //     @Ctx() {em} : MyContext
-  //   ) {
-  //     //onst user = await emitSchemaDefinitionFile.findOne(User, {email});
-  //     return true;
-  //   }
-  // }
+  @Mutation(() => UserResponse)
+  async changePassword(
+    @Arg("token") token: string,
+    @Arg("newPassword") newPassword: string,
+    @Ctx() { req, em, redis }: MyContext
+  ): Promise<UserResponse> {
+    if (newPassword.length <= 2) {
+      return {
+        errors: [
+          {
+            field: "newPassword",
+            message: "length has to be greater than 2",
+          },
+        ],
+      };
+    }
+    const key = FORGET_PASSWORD_PREFIX + token;
+    // Error is here, redis.get is only returning a promise, not the acutal
+    const userId = await redis.get(key);
+    if (!userId) {
+      return {
+        errors: [
+          {
+            field: "token",
+            message: "token expired",
+          },
+        ],
+      };
+    }
+
+    const user = await em.findOne(User, { id: parseInt(userId) });
+    if (!user) {
+      return {
+        errors: [
+          {
+            field: "token",
+            message: "user no longer exists",
+          },
+        ],
+      };
+    }
+    console.log(user.username);
+    console.log(newPassword);
+    //Exception safety?
+    const hashedPassword = await argon2.hash(newPassword);
+    user.password = hashedPassword;
+    em.persistAndFlush(user);
+
+    // log in user after changing password
+    req.session.userId = user.id;
+    // Might need to do confirm password box
+    await redis.del(key);
+    return { user };
+  }
+  @Mutation(() => Boolean)
+  async forgotPassword(
+    @Arg("email") email: string,
+    @Ctx() { em, redis }: MyContext
+  ) {
+    const user = await em.findOne(User, { email });
+    if (!user) {
+      // the email is not in the db
+      return true;
+    }
+
+    const token = v4();
+    // Good for 3 days
+    redis.set(
+      FORGET_PASSWORD_PREFIX + token,
+      user.id,
+      "ex",
+      1000 * 60 * 60 * 24 * 3
+    );
+    await sendEmail(
+      email,
+      `<a href="http://localhost:3000/change-password/${token}">reset password</a>`
+    );
+
+    return true;
+  }
   @Query(() => User, { nullable: true })
   async me2(@Ctx() { req, em }: MyContext) {
     if (!req.session.userId) {

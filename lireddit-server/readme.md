@@ -11,10 +11,14 @@ at 30mins or so, npm install reflect-metadata, and also u might need username/pa
 
 For some reason, importing a file in a seperate folder you need to use ../ depending on how many layers up the file is. Can't just use Ctrl+.
 
-To get the playground, added this piece of code in index file where the apollo server was generated:         
+To get the playground, added this piece of code in index file where the apollo server was generated:  
 plugins: [
-            ApolloServerPluginLandingPageGraphQLPlayground({
-              // options
-            })
-          ],
+ApolloServerPluginLandingPageGraphQLPlayground({
+// options
+})
+],
 
+When using nodemailer, this code snipped is required to make it work ->  
+tls: {
+rejectUnauthorized: false, // This is required
+},
